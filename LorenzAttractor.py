@@ -101,7 +101,7 @@ def dynamic_pygameLoop(initX, initY, initZ):
 
     screen = pygame.display.set_mode((display_width, display_height))
     clock = pygame.time.Clock()
-    pygame.display.set_caption("10 Print")
+    pygame.display.set_caption("Lorenz Attractor")
 
     def point(x, y):
         pygame.draw.circle(screen, green, [int(x), int(y)], 2)
