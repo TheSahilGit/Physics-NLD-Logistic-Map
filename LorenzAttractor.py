@@ -48,8 +48,10 @@ def calculation(initX, initY, initZ):
     return xs, ys, zs, ts
 
 
-def twoDplot(initX, initY, initZ):
+def twoDplot1(initX, initY, initZ):
     xs, ys, zs, ts = calculation(initX, initY, initZ)
+    a = []
+    b = []
 
     plt.subplot(2, 2, 1)
     plt.plot(xs, ys)
@@ -69,9 +71,55 @@ def twoDplot(initX, initY, initZ):
     plt.ylabel("z")
     plt.title("Y vs Z")
 
+    plt.subplot(2, 2, 4)
+    plt.plot(a, b, label="sigma = 10")
+    plt.plot(a, b, label="roh = 28")
+    plt.plot(a, b, label="beta = 8/3")
+    plt.xlabel("")
+    plt.ylabel("")
+    plt.legend()
+    plt.title("Constants")
+
     plt.suptitle("Lorenz Attractor\n" + "Initial (x,y,z): " + "(" + str(initX) +
                  "," + str(initY) + ',' + str(initZ) + ")")
+    plt.subplots_adjust(hspace=0.39)
+    plt.show()
 
+def twoDplot2(initX, initY, initZ):
+    xs, ys, zs, ts = calculation(initX, initY, initZ)
+    a = []
+    b = []
+
+    plt.subplot(2, 2, 1)
+    plt.plot(ts, xs)
+    plt.xlabel("t")
+    plt.ylabel("x")
+    plt.title("X vs t")
+
+    plt.subplot(2, 2, 2)
+    plt.plot(ts, ys)
+    plt.xlabel("t")
+    plt.ylabel("y")
+    plt.title("Y vs t")
+
+    plt.subplot(2, 2, 3)
+    plt.plot(ts, zs)
+    plt.xlabel("t")
+    plt.ylabel("z")
+    plt.title("Z vs t")
+
+    plt.subplot(2, 2, 4)
+    plt.plot(a, b, label="sigma = 10")
+    plt.plot(a, b, label="roh = 28")
+    plt.plot(a, b, label="beta = 8/3")
+    plt.xlabel("")
+    plt.ylabel("")
+    plt.legend()
+    plt.title("Constants")
+
+    plt.suptitle("Lorenz Attractor\n" + "Initial (x,y,z): " + "(" + str(initX) +
+                 "," + str(initY) + ',' + str(initZ) + ")")
+    plt.subplots_adjust(hspace=0.39)
     plt.show()
 
 
@@ -83,7 +131,7 @@ def threeDplot(initX, initY, initZ):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_zlabel("z")
-    ax.set_title("Lorenz Attractor 3D plot\n"+ "Initial (x,y,z): " + "(" + str(initX) +
+    ax.set_title("Lorenz Attractor 3D plot\n" + "Initial (x,y,z): " + "(" + str(initX) +
                  "," + str(initY) + ',' + str(initZ) + ")")
 
     plt.show()
@@ -98,36 +146,34 @@ def dynamic_pygameLoop(initX, initY, initZ):
     black = [0, 0, 0]
     white = [255, 255, 255]
     green = [0, 255, 0]
+    red = [255, 0, 0]
 
     screen = pygame.display.set_mode((display_width, display_height))
     clock = pygame.time.Clock()
     pygame.display.set_caption("Lorenz Attractor")
 
     def point(x, y):
-        pygame.draw.circle(screen, green, [int(x), int(y)], 2)
+        pygame.draw.circle(screen, red, [int(x), int(y)], 2)
 
     xo = display_width / 2.0
     yo = 0
     scale = 10
 
-    game_exit = False
-    while not game_exit:
+    screen.fill(black)
+    for i in range(len(ys)):
 
-        screen.fill(black)
-        for i in range(len(ys)):
+        plotx = (xs[i] * scale) + xo
+        ploty = (ys[i] * scale) + xo
+        plotz = (zs[i] * scale) + yo
 
-            plotx = (xs[i] * scale) + xo
-            ploty = (ys[i] * scale) + xo
-            plotz = (zs[i] * scale) + yo
+        point(ploty, plotz)
+        pygame.display.update()
+        clock.tick(100)
 
-            point(ploty, plotz)
-            pygame.display.update()
-            clock.tick(100)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
 
 
-threeDplot(0.01, 0, 0)
+twoDplot1(0.01, 0, 0)
