@@ -1,4 +1,4 @@
-### Logistic Map and bifurcation diagam code. ###
+### Logistic Map and bifurcation diagram code. ###
 ### Sahil Islam ###
 ### 03/04/2020 ###
 
