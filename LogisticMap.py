@@ -1,88 +1,108 @@
-### Logistic Map and bifurcation diagram code. ###
+### Logistic Map and bifurcation diagam code. ###
 ### Sahil Islam ###
-### 03/04/2020 ###
+### 23/06/2020 ###
 
-import numpy as np
 import matplotlib.pyplot as plt
-import csv
-import math
+import numpy as np
 
 
-def map_function(r, x):
+def f(r, x):
     return r * x * (1 - x)
 
 
-def solve_loop(r, x):
-    file = open("bifurcation.txt", "w+")
-    for i in range(20):
-        x = map_function(r, x)
-        csv.writer(file).writerow([i, x, r])
-    file.close()
-
-
-def plot_loop1():
-    data = np.loadtxt("bifurcation.txt", delimiter=',')
-    ts = data[:, 0]
-    xs = data[:, 1]
-    rs = data[:, 2]
-
-    plt.plot(rs, xs, '.', color='b')
-    plt.title("Logistic Map" "\n" "Bifurcation Diagram")
-    plt.xlabel("Growth Parameter(r)")
-    plt.ylabel("Population Variable(x)")
-    plt.grid()
-
-
-def plot_loop2(r):
-    data = np.loadtxt("bifurcation.txt", delimiter=',')
-    ts = data[:, 0]
-    xs = data[:, 1]
-    rs = data[:, 2]
-
-    plt.plot(ts, xs, color='blue')
-    plt.title("Logistic Map" "\n" "Population Vs Generation Number\n" "r=" + str(r))
-    plt.xlabel("Generation Number")
-    plt.ylabel("Population Variable(x)")
-    plt.grid()
-
-
-def bifurcation_loop(x0):
-    file = open("bifurcation.txt", "w+")
+def bifurcationDiagram(xo):
+    xs = []
+    rs = []
     for r in np.arange(0.0, 4.0, 0.004):
-        x = x0
+        x = xo
         for i in range(200):
-            x = r * x * (1 - x)
+            x = f(r, x)
             if i > 100:
-                csv.writer(file).writerow([i, x, r])
-    file.close()
-    plot_loop1()
+                xs.append(f(r, x))
+                rs.append(r)
+
+    plt.scatter(rs, xs, marker='.')
+    plt.xlabel("$r$")
+    plt.ylabel("$x$")
+    plt.grid()
+    plt.title("Bifurcation Diagram")
+    plt.show()
 
 
-def generation_loop(r):
-    solve_loop(r, 0.75)
-    plot_loop2(r)
+def cobwebDiagram(r, xo):
+    y1s = []
+    y2s = []
+    x = np.linspace(0, 1, 500)
+
+    for i in x:
+        y1 = f(r, i)
+        y2 = i
+
+        y1s.append(y1)
+        y2s.append(y2)
+
+    px = np.empty(100)
+    py = np.empty(100)
+    px[0] = xo
+    py[0] = 0
+    px[1] = xo
+    py[1] = f(r, px[0])
+    for j in range(1, len(px) - 1):
+        px[j + 1] = py[j]
+        py[j + 1] = f(r, px[j])
+
+    plt.plot(x, y1s)
+    plt.plot(x, y2s)
+    plt.plot(px, py)
+    plt.plot()
+    plt.grid()
+    plt.show()
 
 
-def generation_subplot_loop(r_min, r_max, x_init):
-    n = 0
-    interval = (r_max - r_min) / 4.0
-    for r in np.arange(r_min, r_max, interval):
-        n = n + 1
-        solve_loop(r, x_init)
-        data = np.loadtxt("bifurcation.txt", delimiter=',')
-        ts = data[:, 0]
-        xs = data[:, 1]
-        rs = data[:, 2]
-        plt.subplot(2, 2, n)
-        plt.plot(ts, xs, color='blue')
-        plt.title("Logistic Map" "\n" "Population Vs Generation Number\n" "r=" + str(r))
-        plt.xlabel("Generation Number")
+def generationDiagram(r, xo):
+    xs = []
+    ns = []
+    x = xo
+    for i in range(200):
+        x = f(r, x)
+
+        xs.append(f(r, x))
+        ns.append(i)
+
+    print(len(ns))
+    print(len(xs))
+    plt.plot(ns, xs)
+    plt.xlabel("$n$")
+    plt.ylabel("$x$")
+    plt.grid()
+    plt.title("Generation Diagram")
+    plt.show()
+
+
+def generationMultiplotDiagram(minr, maxr, xo, maxIteration):
+    def solveLoop(r):
+        xs = []
+        ns = []
+        x = xo
+        for i in range(maxIteration):
+            x = f(r, x)
+
+            xs.append(f(r, x))
+            ns.append(i)
+
+        return xs, ns
+
+    r = minr
+    interval = (maxr - minr) / 4
+    for i in range(1, 5):
+        xs, ns = solveLoop(r)
+        plt.subplot(2, 2, i)
+        plt.plot(ns, xs)
+        r += interval
+        plt.title("Logistic Map" "\n" "Population Vs Generation Number\n" "r=" + str(round(r, 4)))
+        plt.xlabel("Generation Number(n)")
         plt.ylabel("Population Variable(x)")
         plt.subplots_adjust(0.12, 0.11, 0.90, 0.88, 0.26, 0.66)
         plt.grid()
+    plt.show()
 
-
-#generation_subplot_loop(0.1, 4.0, 0.75)
-#generation_loop(3.5)
-#bifurcation_loop(0.75)
-plt.show()
