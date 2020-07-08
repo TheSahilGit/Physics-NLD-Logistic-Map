@@ -21,11 +21,13 @@ def bifurcationDiagram(xo):
                 xs.append(f(r, x))
                 rs.append(r)
 
-    plt.scatter(rs, xs, marker='.')
+    col = np.linspace(100, 150, len(xs))
+
+    plt.scatter(rs, xs, s=5, marker='.', c=col, cmap='hsv')
     plt.xlabel("$r$")
     plt.ylabel("$x$")
     plt.grid()
-    plt.title("Bifurcation Diagram")
+    plt.title("Logistic Map \n Bifurcation Diagram")
     plt.show()
 
 
@@ -55,6 +57,9 @@ def cobwebDiagram(r, xo):
     plt.plot(x, y2s)
     plt.plot(px, py)
     plt.plot()
+    plt.title(" Logistic Map \n Cobweb Diagram")
+    plt.xlabel("$x_n$")
+    plt.ylabel("$x_{n+1}$")
     plt.grid()
     plt.show()
 
@@ -75,7 +80,7 @@ def generationDiagram(r, xo):
     plt.xlabel("$n$")
     plt.ylabel("$x$")
     plt.grid()
-    plt.title("Generation Diagram")
+    plt.title("Logistic Map \n Generation Diagram")
     plt.show()
 
 
@@ -106,3 +111,9 @@ def generationMultiplotDiagram(minr, maxr, xo, maxIteration):
         plt.grid()
     plt.show()
 
+
+# generationMultiplotDiagram(2.5, 3.5, 0.2, 30)
+
+# cobwebDiagram(3.99, 0.1)
+
+# bifurcationDiagram(0.2)
